@@ -11,42 +11,35 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      # 1. Репозиторийдегі кодты серверге жүктеу
       - name: Checkout code
         uses: actions/checkout@v4
 
-      # 2. Python ортасын орнату
       - name: Setup Python
         uses: actions/setup-python@v5
         with:
           python-version: '3.11'
 
-      # 3. Керекті Python кітапханаларын орнату
       - name: Install dependencies
         run: |
           pip install flet
           if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
 
-      # 4. Java-ны орнату (Android APK жинау үшін міндетті түрде керек)
       - name: Setup Java
         uses: actions/setup-java@v4
         with:
           distribution: 'temurin'
           java-version: '17'
 
-      # 5. Flutter SDK орнату
       - name: Setup Flutter
         uses: subosito/flutter-action@v2
         with:
           flutter-version: '3.19.0'
 
-      # 6. APK жинау процесі
-      # -y туы барлық сұрақтарға автоматты түрде "Иә" деп жауап береді
+      # 5. APK жинау (Жаңа нұсқалар үшін ең сенімді әдіс)
       - name: Flet Build APK
         run: |
-          flet build apk --project "SatbayevENT" --product "№63 Қ.Сатбаев" --org "com.satbayev.ent" -y -v
+          echo y | flet build apk --project "SatbayevENT" --product "№63 Қ.Сатбаев" --org "com.satbayev.ent" -v
 
-      # 7. Дайын болған APK-ны GitHub-қа жүктеу (Artifacts бөлімінен алу үшін)
       - name: Upload APK
         uses: actions/upload-artifact@v4
         with:
